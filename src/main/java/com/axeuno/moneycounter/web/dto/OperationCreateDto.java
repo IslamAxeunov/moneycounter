@@ -20,4 +20,8 @@ public class OperationCreateDto {
     public void setMoney(Double money) {
         this.money = money;
     }
+
+    public String toString(){
+        return "desc:" + description + money;
+    }
 }

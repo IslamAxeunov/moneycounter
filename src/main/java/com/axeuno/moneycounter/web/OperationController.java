@@ -2,10 +2,12 @@ package com.axeuno.moneycounter.web;
 
 import com.axeuno.moneycounter.web.dto.OperationCreateDto;
 import com.axeuno.moneycounter.web.dto.OperationDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.websocket.server.PathParam;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +21,12 @@ public class OperationController {
 
 
     @PostMapping("/operation")
-    public OperationDto saveOperation(@RequestBody OperationCreateDto operationCreateDto) {
+    public OperationDto saveOperation(@RequestBody byte[] body) throws IOException {
+
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        OperationCreateDto operationCreateDto = objectMapper.readValue(body, OperationCreateDto.class);
+
         System.out.println("Receieve request body: " + operationCreateDto);
 
         OperationDto operationDto = new OperationDto();
@@ -28,6 +35,7 @@ public class OperationController {
         operationDto.setDescription(operationCreateDto.getDescription());
         operationDto.setMoney(operationCreateDto.getMoney());
         operationDto.setTime(LocalDateTime.now());
+        System.out.println("OperationDto: " + operationDto);
 
 
         savedRequestsWithDate.add(operationDto);
@@ -54,9 +62,17 @@ public class OperationController {
     }
 
 
-    @DeleteMapping("/operation")
-    public List<OperationDto> deleteOperation() {
-        return null; //todo
+    @DeleteMapping("/operation/{operationId}")
+    public void deleteOperation(@PathVariable Integer operationId) {
+
+        System.out.println("getting operation with id: " + operationId);
+
+        boolean deleted = savedRequestsWithDate.removeIf(operationDto -> operationDto.getId().equals(operationId));
+        if (!deleted) {
+            throw new RuntimeException();
+        }
+
+
     }
 
 }
