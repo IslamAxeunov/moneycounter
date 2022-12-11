@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OperationRepository {
+
     List<OperationDto> savedRequestsWithDate = new ArrayList<>();
 
     int lastId = 0;
@@ -22,5 +23,17 @@ public class OperationRepository {
 
         savedRequestsWithDate.add(operationToSave);
 
+    }
+
+    public List<OperationDto> getAllSavedOperations() {
+        return savedRequestsWithDate;
+    }
+
+    public OperationDto getOneSavedOperation(Integer operationId) {
+        for (int i = 0; i < savedRequestsWithDate.size(); i++) {
+            if (operationId.equals(savedRequestsWithDate.get(i).getId()))
+                return savedRequestsWithDate.get(i);
+        }
+        throw new RuntimeException();
     }
 }

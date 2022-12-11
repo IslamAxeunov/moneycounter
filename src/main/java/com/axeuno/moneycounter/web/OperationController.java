@@ -15,7 +15,7 @@ import java.util.List;
 public class OperationController {
 
     OperationService operationService = new OperationService();
-    List<OperationDto> savedRequestsWithDate = new ArrayList<>();
+    List<OperationDto>savedRequestsWithDate = new ArrayList<>();
     int lastId = 0;
 
 
@@ -53,23 +53,18 @@ public class OperationController {
         return createdOperation;
     }
 
-    @GetMapping("/operation")
+    @GetMapping("/operations")
     public List<OperationDto> getAllOperation() {
-        return savedRequestsWithDate;
+        return operationService.getAllOperations();
     }
 
     @GetMapping("/operation/{operationId}")
-    public OperationDto getAllOperation(@PathVariable Integer operationId) {
+    public OperationDto getOperationById(@PathVariable Integer operationId) {
         System.out.println("getting operation with id: " + operationId);
+        return operationService.getOperationById(operationId);
 
 
-        for (OperationDto operationDto : savedRequestsWithDate) {
-            if (operationDto.getId().equals(operationId)) {
-                return operationDto;
-            }
-        }
 
-        throw new RuntimeException("not found"); //todo
     }
 
 

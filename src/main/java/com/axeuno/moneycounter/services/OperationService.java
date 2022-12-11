@@ -5,7 +5,10 @@ import com.axeuno.moneycounter.dao.OperationRepository;
 import com.axeuno.moneycounter.dto.OperationCreateFormDto;
 import com.axeuno.moneycounter.dto.OperationDto;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OperationService {
 
@@ -29,4 +32,14 @@ public class OperationService {
         operationRepository.saveOperation(newOperation);
         return newOperation;
     }
+
+    public List<OperationDto> getAllOperations() {
+        List<OperationDto> getAllSavedOperations = operationRepository.getAllSavedOperations();
+        return getAllSavedOperations;
+    }
+
+    public OperationDto getOperationById(Integer operationId) {
+        return operationRepository.getOneSavedOperation(operationId);
+    }
 }
+
