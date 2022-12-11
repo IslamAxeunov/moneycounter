@@ -1,11 +1,10 @@
 package com.axeuno.moneycounter.web;
 
-import com.axeuno.moneycounter.web.dto.OperationCreateDto;
-import com.axeuno.moneycounter.web.dto.OperationDto;
+import com.axeuno.moneycounter.services.OperationService;
+import com.axeuno.moneycounter.dto.OperationCreateFormDto;
+import com.axeuno.moneycounter.dto.OperationDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.websocket.server.PathParam;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -15,31 +14,43 @@ import java.util.List;
 @RestController
 public class OperationController {
 
-    List<OperationCreateDto> savedRequests = new ArrayList<>();
+    OperationService operationService = new OperationService();
     List<OperationDto> savedRequestsWithDate = new ArrayList<>();
     int lastId = 0;
 
 
-    @PostMapping("/operation")
-    public OperationDto saveOperation(@RequestBody byte[] body) throws IOException {
+//    @PostMapping("/operation")
+    public OperationDto oldSaveOperation(@RequestBody byte[] body) throws IOException {
 
 
         ObjectMapper objectMapper = new ObjectMapper();
-        OperationCreateDto operationCreateDto = objectMapper.readValue(body, OperationCreateDto.class);
+        OperationCreateFormDto operationCreateFormDto = objectMapper.readValue(body, OperationCreateFormDto.class);
 
-        System.out.println("Receieve request body: " + operationCreateDto);
+        System.out.println("Receieve request body: " + operationCreateFormDto);
 
         OperationDto operationDto = new OperationDto();
         lastId = lastId + 1;
         operationDto.setId(lastId);
-        operationDto.setDescription(operationCreateDto.getDescription());
-        operationDto.setMoney(operationCreateDto.getMoney());
+        operationDto.setDescription(operationCreateFormDto.getDescription());
+        operationDto.setMoney(operationCreateFormDto.getMoney());
         operationDto.setTime(LocalDateTime.now());
         System.out.println("OperationDto: " + operationDto);
 
 
         savedRequestsWithDate.add(operationDto);
         return operationDto;
+    }
+
+    @SuppressWarnings("UnnecessaryLocalVariable")
+    @PostMapping("/operation")
+    public OperationDto saveOperation(@RequestBody byte[] body) throws IOException {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        OperationCreateFormDto operationCreateFormDto = objectMapper.readValue(body, OperationCreateFormDto.class);
+        System.out.println("Receieve request body: " + operationCreateFormDto);
+
+        OperationDto createdOperation = operationService.createOperation(operationCreateFormDto);
+        return createdOperation;
     }
 
     @GetMapping("/operation")

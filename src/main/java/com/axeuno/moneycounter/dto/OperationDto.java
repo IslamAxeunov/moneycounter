@@ -1,4 +1,4 @@
-package com.axeuno.moneycounter.web.dto;
+package com.axeuno.moneycounter.dto;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

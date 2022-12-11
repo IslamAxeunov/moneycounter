@@ -1,6 +1,6 @@
-package com.axeuno.moneycounter.web.dto;
+package com.axeuno.moneycounter.dto;
 
-public class OperationCreateDto {
+public class OperationCreateFormDto {
 
     private String description;
     private Double money;
